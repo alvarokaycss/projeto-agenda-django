@@ -2,7 +2,6 @@
 # type: ignore
 
 from django.core.paginator import Paginator
-from django.http import Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from contact.models import Contact
 from django.db.models import Q # Esse Q é para usar o OR em filtros BD
