@@ -10,7 +10,7 @@ class ContactForm(forms.ModelForm):
     class Meta:
         model = models.Contact
         fields = ('first_name', 'last_name', 'phone',
-                  'email', 'description', 'category',)
+                  'email', 'description', 'category', 'picture', )
 
         labels = {
             'first_name': 'Primeiro nome',
@@ -19,6 +19,7 @@ class ContactForm(forms.ModelForm):
             'email': 'E-mail',
             'description': 'Descrição',
             'category': 'Categoria',
+            'picture': 'Imagem do contato',
         }
 
         widgets = {
@@ -36,6 +37,9 @@ class ContactForm(forms.ModelForm):
             }),
             'description': forms.Textarea(attrs={
                 'placeholder': 'Descreva observações...'
+            }),
+            'picture': forms.FileInput(attrs={
+                'accept': 'image/*'
             }),
         }
 
