@@ -1,15 +1,14 @@
-{% extends 'global/base.html' %}
+{% extends "global/base.html" %}
 
 {% block content %}
   <div class="form-wrapper">
 
-    <h2>Contato</h2>
+    <h2>Registrar</h2>
     
     <form 
       action="{{ form_action }}"
       method="POST"
-      enctype="multipart/form-data"
-    > <!-- O enctype serve para trabalhar com arquivos -->
+    >
 
     {% csrf_token %} <!-- Esse token faz parte do middleware que verifica e valida as informações do forms que irão para a aplicação -->
 
@@ -26,11 +25,6 @@
           {% endif %}
 
         </div>
-        {% if field.name == 'picture' and field.value.url %}
-          <div class="form-group">
-            <img src="{{field.value.url}}" alt="">
-          </div>
-        {% endif %}
         {% endfor %}
 
       </div>

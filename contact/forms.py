@@ -4,9 +4,12 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from . import models
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from contact.mixins import NameValidationMixin
 
 
-class ContactForm(forms.ModelForm):
+class ContactForm(NameValidationMixin, forms.ModelForm):
     class Meta:
         model = models.Contact
         fields = ('first_name', 'last_name', 'phone',
@@ -43,48 +46,6 @@ class ContactForm(forms.ModelForm):
             }),
         }
 
-    def clean(self):
-        cleaned_data = super().clean()
-        first_name = cleaned_data.get('first_name')
-        last_name = cleaned_data.get('last_name')
-
-        if first_name and last_name:
-            if first_name.strip().lower() == last_name.strip().lower():
-                self.add_error('last_name', ValidationError(
-                    'O último nome não pode ser igual ao primeiro nome.',
-                    code='invalid'
-                ))
-
-        return cleaned_data
-
-    def clean_first_name(self):
-        first_name = self.cleaned_data.get('first_name')
-
-        if not first_name:
-            raise ValidationError(
-                'O campo "Primeiro nome" é obrigatório.',
-                code='required'
-            )
-
-        if len(first_name.strip()) < 2:
-            raise ValidationError(
-                'O primeiro nome deve ter pelo menos 2 caracteres.',
-                code='invalid'
-            )
-
-        return first_name
-
-    def clean_last_name(self):
-        last_name = self.cleaned_data.get('last_name')
-
-        if not last_name:
-            raise ValidationError(
-                'O campo "Último nome" é obrigatório.',
-                code='required'
-            )
-
-        return last_name
-
     def clean_phone(self):
         phone = self.cleaned_data.get('phone')
 
@@ -102,7 +63,26 @@ class ContactForm(forms.ModelForm):
         if not email:
             raise ValidationError('O campo "E-mail" é obrigatório.', code='required')
 
-        if not '@' in email:
+        if '@' not in email:
             raise ValidationError('Informe um e-mail válido.', code='invalid')
+
+        return email
+
+
+class RegisterForm(NameValidationMixin, UserCreationForm):
+    class Meta:
+        model = User
+        fields = (
+            'first_name', 'last_name', 'email', 'username', 'password1', 'password2',
+            )
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+
+        if User.objects.filter(email=email).exists():
+            self.add_error('email', ValidationError(
+                    'Este e-mail já está sendo utilizado por outro usuário',
+                    code='unique'
+            ))
 
         return email
