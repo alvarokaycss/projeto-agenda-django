@@ -58,7 +58,6 @@ Para rodar este projeto em sua máquina local, siga os passos abaixo:
     ```bash
     pip install -r requirements.txt
     ```
-    *Se você ainda não tem um `requirements.txt`, pode gerá-lo após instalar suas dependências (Django, etc.) com `pip freeze > requirements.txt`.*
 
 4.  **Execute as Migrações do Banco de Dados:**
     ```bash
